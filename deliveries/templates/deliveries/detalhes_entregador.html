@@ -1,0 +1,98 @@
+{% extends 'deliveries/base.html' %}
+
+{% block title %}Entregador {{ entregador.nome }} - QuickDeliver{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <!-- Cabeçalho -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="display-5">🏍️ {{ entregador.nome }}</h1>
+                <span class="badge {% if entregador.disponibilidade %}bg-success{% else %}bg-danger{% endif %} fs-6">
+                    {% if entregador.disponibilidade %}Disponível{% else %}Indisponível{% endif %}
+                </span>
+            </div>
+
+            <!-- Card de Informações do Entregador -->
+            <div class="card mb-4">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">Informações do Entregador</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>🚗 Veículo:</strong> {{ entregador.veiculo }}</p>
+                            <p><strong>🔢 Placa:</strong> {{ entregador.placa|default:"Não informada" }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>📍 Localização:</strong> {{ entregador.localizacao_atual|default:"Não informada" }}</p>
+                            <p><strong>📊 Status:</strong> 
+                                <span class="badge {% if entregador.disponibilidade %}bg-success{% else %}bg-danger{% endif %}">
+                                    {% if entregador.disponibilidade %}Disponível{% else %}Indisponível{% endif %}
+                                </span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card de Pedidos do Entregador -->
+            <div class="card mb-4">
+                <div class="card-header bg-warning text-dark">
+                    <h5 class="mb-0">📦 Pedidos deste Entregador</h5>
+                </div>
+                <div class="card-body">
+                    {% if entregador.pedidos_entregues.all %}  <!-- ✅ CORRIGIDO -->
+                    <div class="table-responsive">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>ID Pedido</th>
+                                    <th>Cliente</th>
+                                    <th>Status</th>
+                                    <th>Data</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for pedido in entregador.pedidos_entregues.all %}  <!-- ✅ CORRIGIDO -->
+                                <tr>
+                                    <td>
+                                        <a href="{% url 'detalhes_pedido' pedido.id %}" class="text-decoration-none">
+                                            #{{ pedido.id }}
+                                        </a>
+                                    </td>
+                                    <td>{{ pedido.cliente.nome }}</td>
+                                    <td>
+                                        <span class="badge 
+                                            {% if pedido.status == 'E' %}bg-success
+                                            {% elif pedido.status == 'R' %}bg-warning
+                                            {% else %}bg-info{% endif %}">
+                                            {{ pedido.get_status_display }}
+                                        </span>
+                                    </td>
+                                    <td>{{ pedido.data_hora_pedido|date:"d/m/Y" }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <p class="text-muted">Este entregador não possui pedidos atribuídos.</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Botões de Ação -->
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                <a href="{% url 'lista_entregadores' %}" class="btn btn-secondary me-md-2">
+                    <i class="fas fa-arrow-left me-2"></i>Voltar para Lista
+                </a>
+                <a href="{% url 'admin:deliveries_entregador_change' entregador.id %}" class="btn btn-warning">
+                    <i class="fas fa-edit me-2"></i>Editar no Admin
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

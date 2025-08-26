@@ -1,0 +1,48 @@
+{% extends 'deliveries/base.html' %}
+
+{% block title %}{{ titulo }} - QuickDeliver{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">{{ titulo }}</h4>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="mb-3">
+                            <label class="form-label">O que você está avaliando?</label>
+                            {{ form.tipo }}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Nota (1-5 estrelas)</label>
+                            {{ form.nota }}
+                            <div class="form-text">1 = Péssimo, 5 = Excelente</div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Comentário (opcional)</label>
+                            {{ form.comentario }}
+                        </div>
+                        
+                        <div class="mb-3 form-check">
+                            {{ form.anonimo }}
+                            <label class="form-check-label">Avaliação anônima</label>
+                        </div>
+                        
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-success">Enviar Avaliação</button>
+                            <a href="{% url 'lista_avaliacoes' %}" class="btn btn-secondary">Cancelar</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

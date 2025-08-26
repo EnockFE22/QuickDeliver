@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}QuickDeliver{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+    .hover-card {
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        border: 2px solid transparent;
+    }
+    
+    .hover-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15) !important;
+        border-color: #007bff;
+    }
+    
+    .text-decoration-none:hover {
+        text-decoration: none !important;
+    }
+
+    .card {
+        transition: transform 0.2s ease-in-out;
+        border: none;
+        border-radius: 15px;
+    }
+
+    .card:hover {
+        transform: translateY(-2px);
+    }
+
+    .progress {
+        border-radius: 10px;
+    }
+
+    .badge {
+        font-size: 0.8em;
+    }
+
+    .text-warning {
+        color: #ffc107 !important;
+    }
+
+    .btn-success {
+        background: linear-gradient(45deg, #28a745, #20c997);
+        border: none;
+        border-radius: 10px;
+    }
+
+    .btn-primary {
+        background: linear-gradient(45deg, #007bff, #0056b3);
+        border: none;
+        border-radius: 10px;
+    }
+
+    /* REMOVA ou COMENTE este .main-content - já existe no template filho */
+    /*
+    .main-content {
+        padding-top: 80px;
+        min-height: calc(100vh - 120px);
+    }
+    */
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">  <!-- ← Adicione fixed-top -->
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'home' %}">
+                <i class="fas fa-shipping-fast me-2"></i>QuickDeliver
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">  <!-- ← Adicione uma lista -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'home' %}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'sobre' %}">Sobre</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'lista_clientes' %}">Clientes</a>
+                    </li>
+                    <!-- ↓↓ MOVEU o item Avaliações para dentro da navbar ↓↓ -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'lista_avaliacoes' %}">
+                            <i class="fas fa-star"></i> Avaliações
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'admin:index' %}">Admin</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- REMOVA este li solto que estava aqui -->
+    
+    <main class="container" style="padding-top: 90px;">  <!-- ← Adicione padding-top -->
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <footer class="bg-dark text-white text-center py-3 mt-5">
+        <p>&copy; 2024 QuickDeliver - Sistema de Entregas Inteligentes</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,43 @@
+{% extends 'deliveries/base.html' %}
+
+{% block title %}Sobre - QuickDeliver{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <h1 class="display-4 mb-4">Sobre o QuickDeliver</h1>
+        
+        <div class="card mb-4">
+            <div class="card-body">
+                <h3>🚀 Nossa Missão</h3>
+                <p>Oferecer um sistema inteligente de gestão de entregas para pequenos e médios comércios.</p>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-body">
+                <h3>👥 Desenvolvido por</h3>
+                <ul class="list-group">
+                    <li class="list-group-item">Paulo Victor e Enock Fernandes - Backend Developer</li>
+                    <li class="list-group-item">Paulo Victor - Frontend Developer</li>
+                    <li class="list-group-item">Enock Fernandes - Database Specialist</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <h3>📞 Contato</h3>
+                <p>Email: contato@quickdeliver.com</p>
+                <p>GitHub: github.com/quickdeliver</p>
+            </div>
+        </div>
+
+        <div class="mt-4">
+            <a href="{% url 'home' %}" class="btn btn-primary">
+                <i class="fas fa-arrow-left me-2"></i>Voltar para Home
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

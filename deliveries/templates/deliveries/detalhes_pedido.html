@@ -1,0 +1,137 @@
+{% extends 'deliveries/base.html' %}
+{% load custom_filters %}
+
+{% block title %}Pedido #{{ pedido.id }} - QuickDeliver{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <!-- Cabeçalho -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="display-5">📦 Pedido #{{ pedido.id }}</h1>
+                <span class="badge {% if pedido.status == 'E' %}bg-success{% elif pedido.status == 'R' %}bg-warning{% else %}bg-info{% endif %} fs-6">
+                    {{ pedido.get_status_display }}
+                </span>
+            </div>
+
+            <!-- Card de Informações do Pedido -->
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Informações do Pedido</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Data/Hora:</strong> {{ pedido.data_hora_pedido|date:"d/m/Y H:i" }}</p>
+                            <p><strong>Prioridade:</strong> 
+                                <span class="badge {% if pedido.prioridade == 'U' %}bg-danger{% else %}bg-secondary{% endif %}">
+                                    {{ pedido.get_prioridade_display }}
+                                </span>
+                            </p>
+                            <p><strong>Valor Total:</strong> R$ {{ pedido.valor_total|floatformat:2 }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Status:</strong> 
+                                <span class="badge {% if pedido.status == 'E' %}bg-success{% elif pedido.status == 'R' %}bg-warning{% else %}bg-info{% endif %}">
+                                    {{ pedido.get_status_display }}
+                                </span>
+                            </p>
+                            <p><strong>Endereço de Entrega:</strong> {{ pedido.endereco_entrega }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card do Cliente -->
+            <div class="card mb-4">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">👤 Cliente</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Nome:</strong> {{ pedido.cliente.nome }}</p>
+                    <p><strong>Telefone:</strong> {{ pedido.cliente.telefone }}</p>
+                    <p><strong>Email:</strong> {{ pedido.cliente.email }}</p>
+                    <p><strong>Endereço:</strong> {{ pedido.cliente.endereco }}</p>
+                </div>
+            </div>
+
+            <!-- Card do Entregador -->
+            {% if pedido.entregador %}
+            <div class="card mb-4">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">🏍️ Entregador</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Nome:</strong> {{ pedido.entregador.nome }}</p>
+                    <p><strong>Veículo:</strong> {{ pedido.entregador.veiculo }}</p>
+                    <p><strong>Placa:</strong> {{ pedido.entregador.placa|default:"Não informada" }}</p>
+                    <p><strong>Disponibilidade:</strong> 
+                        <span class="badge {% if pedido.entregador.disponibilidade %}bg-success{% else %}bg-danger{% endif %}">
+                            {% if pedido.entregador.disponibilidade %}Disponível{% else %}Indisponível{% endif %}
+                        </span>
+                    </p>
+                    {% if pedido.entregador.localizacao_atual %}
+                    <p><strong>Localização:</strong> {{ pedido.entregador.localizacao_atual }}</p>
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Card de Produtos -->
+            <div class="card mb-4">
+                <div class="card-header bg-warning text-dark">
+                    <h5 class="mb-0">📋 Produtos</h5>
+                </div>
+                <div class="card-body">
+                    {% if pedido.produtos %}
+                    <div class="table-responsive">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Produto</th>
+                                    <th>Quantidade</th>
+                                    <th>Preço Unit.</th>
+                                    <th>Subtotal</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for produto in pedido.produtos %}
+                                <tr>
+                                    <td>{{ produto.nome }}</td>
+                                    <td>{{ produto.quantidade }}</td>
+                                    <td>R$ {{ produto.preco|floatformat:2 }}</td>
+                                    <td>R$ {{ produto.preco|multiply:produto.quantidade|floatformat:2 }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                            <tfoot>
+                                <tr class="table-primary">
+                                    <td colspan="3" class="text-end"><strong>Total:</strong></td>
+                                    <td><strong>R$ {{ pedido.valor_total|floatformat:2 }}</strong></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    {% else %}
+                    <p class="text-muted">Nenhum produto cadastrado para este pedido.</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Botões de Ação -->
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                <a href="{% url 'lista_pedidos' %}" class="btn btn-secondary me-md-2">
+                    <i class="fas fa-arrow-left me-2"></i>Voltar para Lista
+                </a>
+                <a href="{% url 'admin:deliveries_pedido_change' pedido.id %}" class="btn btn-warning me-md-2">
+                    <i class="fas fa-edit me-2"></i>Editar no Admin
+                </a>
+                <a href="#" class="btn btn-danger">
+                    <i class="fas fa-trash me-2"></i>Cancelar Pedido
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

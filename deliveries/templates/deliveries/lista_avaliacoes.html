@@ -1,0 +1,209 @@
+{% extends 'deliveries/base.html' %}
+
+{% block title %}Avaliações - QuickDeliver{% endblock %}
+
+{% block content %}
+<div class="container main-content">  <!-- ← Adicione a classe main-content aqui -->
+    
+    <!-- Cabeçalho -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <h1 class="display-5">⭐ Avaliações</h1>
+                {% if user.is_authenticated %}
+                <a href="{% url 'criar_avaliacao' %}" class="btn btn-success btn-lg">
+                    <i class="fas fa-plus-circle"></i> Nova Avaliação
+                </a>
+                {% endif %}
+            </div>
+            <p class="text-muted">Veja as opiniões de nossos clientes e entregadores</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Sidebar com filtros e estatísticas -->
+        <div class="col-md-4 col-lg-3">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="fas fa-filter"></i> Filtros</h5>
+                </div>
+                <div class="card-body">
+                    <form method="get">
+                        <div class="mb-3">
+                            <label class="form-label">Tipo de Avaliação</label>
+                            <select name="tipo" class="form-select">
+                                <option value="">Todos os tipos</option>
+                                <option value="entregador">Entregadores</option>
+                                <option value="pedido">Pedidos</option>
+                                <option value="cliente">Clientes</option>
+                                <option value="servico">Serviço Geral</option>
+                                <option value="estabelecimento">Estabelecimentos</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Nota Mínima</label>
+                            <select name="min_nota" class="form-select">
+                                <option value="">Qualquer nota</option>
+                                <option value="5">5 estrelas</option>
+                                <option value="4">4+ estrelas</option>
+                                <option value="3">3+ estrelas</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Ordenar por</label>
+                            <select name="ordenacao" class="form-select">
+                                <option value="-data_criacao">Mais recentes</option>
+                                <option value="data_criacao">Mais antigas</option>
+                                <option value="-nota">Melhores avaliações</option>
+                                <option value="nota">Piores avaliações</option>
+                            </select>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="fas fa-check"></i> Aplicar Filtros
+                        </button>
+                        <a href="{% url 'lista_avaliacoes' %}" class="btn btn-outline-secondary w-100 mt-2">
+                            <i class="fas fa-times"></i> Limpar
+                        </a>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Estatísticas -->
+            <div class="card shadow-sm">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0"><i class="fas fa-chart-bar"></i> Estatísticas</h5>
+                </div>
+                <div class="card-body">
+                    <div class="text-center mb-3">
+                        <div class="display-4 text-primary">{{ estatisticas.media_geral|floatformat:1 }}</div>
+                        <div class="text-muted">Média geral</div>
+                        <div class="text-warning">
+                            {% for i in "12345" %}
+                                {% if forloop.counter <= estatisticas.media_geral %}
+                                    ⭐
+                                {% else %}
+                                    ☆
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+                    <hr>
+                    
+                    <p><strong>Total:</strong> {{ estatisticas.total }} avaliações</p>
+                    
+                    <h6>Distribuição por tipo:</h6>
+                    {% for item in estatisticas.por_tipo %}
+                    <div class="mb-2">
+                        <div class="d-flex justify-content-between">
+                            <span>{{ item.tipo|title }}:</span>
+                            <span>{{ item.total }}</span>
+                        </div>
+                        <div class="progress" style="height: 5px;">
+                            <div class="progress-bar bg-success" 
+                                style="width: {% widthratio item.total estatisticas.total 100 %}%">
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Lista de Avaliações -->
+        <div class="col-md-8 col-lg-9">
+            {% if page_obj %}
+            <div class="row">
+                {% for avaliacao in page_obj %}
+                <div class="col-12 mb-3">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <div>
+                                    <span class="h4 text-warning">{{ avaliacao.estrelas }}</span>
+                                    <span class="badge bg-secondary ms-2">{{ avaliacao.get_tipo_display }}</span>
+                                </div>
+                                <small class="text-muted">{{ avaliacao.data_criacao|date:"d/m/Y H:i" }}</small>
+                            </div>
+                            
+                            <p class="card-text">{{ avaliacao.comentario|default:"Sem comentário" }}</p>
+                            
+                            <div class="d-flex justify-content-between align-items-center">
+                                <small class="text-muted">
+                                    <i class="fas fa-user"></i>
+                                    {% if avaliacao.anonimo %}
+                                        Avaliação anônima
+                                    {% else %}
+                                        Por: {{ avaliacao.avaliador.get_full_name|default:avaliacao.avaliador.username }}
+                                    {% endif %}
+                                </small>
+                                
+                                {% if user == avaliacao.avaliador %}
+                                <span class="badge bg-info">Sua avaliação</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="text-center py-5">
+                <div class="text-muted mb-3">
+                    <i class="fas fa-comments fa-3x"></i>
+                </div>
+                <h4>Nenhuma avaliação encontrada</h4>
+                <p class="text-muted">Seja o primeiro a compartilhar sua experiência!</p>
+                {% if user.is_authenticated %}
+                <a href="{% url 'criar_avaliacao' %}" class="btn btn-success">
+                    <i class="fas fa-plus"></i> Criar Primeira Avaliação
+                </a>
+                {% else %}
+                <a href="{% url 'login' %}" class="btn btn-primary">
+                    <i class="fas fa-sign-in-alt"></i> Fazer Login para Avaliar
+                </a>
+                {% endif %}
+            </div>
+            {% endif %}
+
+            <!-- Paginação -->
+            {% if page_obj.has_other_pages %}
+            <nav aria-label="Navegação de páginas" class="mt-4">
+                <ul class="pagination justify-content-center">
+                    {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">
+                            <i class="fas fa-chevron-left"></i> Anterior
+                        </a>
+                    </li>
+                    {% endif %}
+                    
+                    {% for num in page_obj.paginator.page_range %}
+                        {% if page_obj.number == num %}
+                        <li class="page-item active">
+                            <span class="page-link">{{ num }}</span>
+                        </li>
+                        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ num }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">{{ num }}</a>
+                        </li>
+                        {% endif %}
+                    {% endfor %}
+                    
+                    {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.next_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">
+                            Próxima <i class="fas fa-chevron-right"></i>
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

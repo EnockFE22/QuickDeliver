@@ -1,0 +1,20 @@
+{% extends 'deliveries/base.html' %}
+
+{% block title %}{{ titulo }} - QuickDeliver{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6 mx-auto text-center">
+        <div class="card">
+            <div class="card-body py-5">
+                <i class="fas fa-tools fa-4x text-warning mb-4"></i>
+                <h2>{{ titulo }}</h2>
+                <p class="text-muted">{{ mensagem }}</p>
+                <a href="{% url 'home' %}" class="btn btn-primary mt-3">
+                    <i class="fas fa-arrow-left me-2"></i>Voltar para Home
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

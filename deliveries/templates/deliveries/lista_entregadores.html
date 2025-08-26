@@ -1,0 +1,82 @@
+{% extends 'deliveries/base.html' %}
+
+{% block title %}Entregadores - QuickDeliver{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="display-4 mb-4">🏍️ Lista de Entregadores</h1>
+    
+    <div class="card">
+        <div class="card-body">
+            {% if entregadores %}
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>ID</th>
+                            <th>Nome</th>
+                            <th>Veículo</th>
+                            <th>Placa</th>
+                            <th>Disponibilidade</th>
+                            <th>Localização</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for entregador in entregadores %}
+                        <tr>
+                            <td>{{ entregador.id }}</td>
+                            <td>{{ entregador.nome }}</td>
+                            <td>
+                                <span class="badge 
+                                    {% if entregador.veiculo == 'Moto' %}bg-info
+                                    {% elif entregador.veiculo == 'Carro' %}bg-primary
+                                    {% else %}bg-secondary{% endif %}">
+                                    {{ entregador.veiculo }}
+                                </span>
+                            </td>
+                            <td>{{ entregador.placa|default:"-" }}</td>
+                            <td>
+                                <span class="badge 
+                                    {% if entregador.disponibilidade %}bg-success
+                                    {% else %}bg-danger{% endif %}">
+                                    {% if entregador.disponibilidade %}Disponível
+                                    {% else %}Indisponível{% endif %}
+                                </span>
+                            </td>
+                            <td>{{ entregador.localizacao_atual|default:"Não informada" }}</td>
+                            <td>
+                                <a href="{% url 'detalhes_entregador' entregador.id %}" class="btn btn-sm btn-info">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <a href="#" class="btn btn-sm btn-warning">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="text-center py-4">
+                <i class="fas fa-motorcycle fa-3x text-muted mb-3"></i>
+                <p class="text-muted">Nenhum entregador cadastrado ainda.</p>
+                <a href="{% url 'admin:deliveries_entregador_add' %}" class="btn btn-success">
+                    <i class="fas fa-plus me-2"></i>Cadastrar Primeiro Entregador
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="mt-3">
+        <a href="{% url 'home' %}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Voltar para Home
+        </a>
+        <a href="{% url 'admin:deliveries_entregador_add' %}" class="btn btn-success">
+            <i class="fas fa-plus me-2"></i>Novo Entregador
+        </a>
+    </div>
+</div>
+{% endblock %}

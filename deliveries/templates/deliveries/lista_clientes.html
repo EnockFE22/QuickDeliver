@@ -1,0 +1,66 @@
+{% extends 'deliveries/base.html' %}
+
+{% block title %}Clientes - QuickDeliver{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="display-4 mb-4">📋 Lista de Clientes</h1>
+    
+    <div class="card">
+        <div class="card-body">
+            {% if clientes %}
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>ID</th>
+                            <th>Nome</th>
+                            <th>Telefone</th>
+                            <th>Email</th>
+                            <th>Endereço</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for cliente in clientes %}
+                        <tr>
+                            <td>{{ cliente.id }}</td>
+                            <td>{{ cliente.nome }}</td>
+                            <td>{{ cliente.telefone }}</td>
+                            <td>{{ cliente.email }}</td>
+                            <td>{{ cliente.endereco|truncatewords:5 }}</td>
+                            <td>
+                                <a href="#" class="btn btn-sm btn-info">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <a href="#" class="btn btn-sm btn-warning">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="text-center py-4">
+                <i class="fas fa-users fa-3x text-muted mb-3"></i>
+                <p class="text-muted">Nenhum cliente cadastrado ainda.</p>
+                <a href="{% url 'admin:index' %}" class="btn btn-primary">
+                    <i class="fas fa-plus me-2"></i>Cadastrar Primeiro Cliente
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="mt-3">
+        <a href="{% url 'home' %}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Voltar para Home
+        </a>
+        <a href="{% url 'admin:deliveries_cliente_add' %}" class="btn btn-success">
+            <i class="fas fa-plus me-2"></i>Novo Cliente
+        </a>
+    </div>
+</div>
+{% endblock %}

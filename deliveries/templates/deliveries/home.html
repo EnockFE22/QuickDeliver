@@ -1,0 +1,69 @@
+{% extends 'deliveries/base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 mx-auto text-center">
+        <h1 class="display-4 mb-4">Bem-vindo ao QuickDeliver!</h1>
+        <p class="lead">Sistema inteligente de gerenciamento de entregas</p>
+        
+        <div class="row mt-5">
+            <!-- CLIENTES -->
+            <div class="col-md-4 mb-4">
+                <a href="{% url 'lista_clientes' %}" class="text-decoration-none">
+                    <div class="card h-100 shadow-sm hover-card">
+                        <div class="card-body text-center">
+                            <i class="fas fa-users fa-3x text-primary mb-3"></i>
+                            <h5 class="card-title">Clientes</h5>
+                            <p class="text-muted">Gerencie seus clientes</p>
+                        </div>
+                        <div class="card-footer bg-transparent">
+                            <small class="text-primary">Ver todos →</small>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- ENTREGADORES -->
+            <div class="col-md-4 mb-4">
+                <a href="{% url 'lista_entregadores' %}" class="text-decoration-none">
+                    <div class="card h-100 shadow-sm hover-card">
+                        <div class="card-body text-center">
+                            <i class="fas fa-motorcycle fa-3x text-success mb-3"></i>
+                            <h5 class="card-title">Entregadores</h5>
+                            <p class="text-muted">Controle sua frota</p>
+                        </div>
+                        <div class="card-footer bg-transparent">
+                            <small class="text-success">Ver todos →</small>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- PEDIDOS -->
+            <div class="col-md-4 mb-4">
+                <a href="{% url 'lista_pedidos' %}" class="text-decoration-none">
+                    <div class="card h-100 shadow-sm hover-card">
+                        <div class="card-body text-center">
+                            <i class="fas fa-box fa-3x text-warning mb-3"></i>
+                            <h5 class="card-title">Pedidos</h5>
+                            <p class="text-muted">Acompanhe as entregas</p>
+                        </div>
+                        <div class="card-footer bg-transparent">
+                            <small class="text-warning">Ver todos →</small>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <div class="mt-5">
+            <a href="{% url 'admin:index' %}" class="btn btn-primary me-3">
+                <i class="fas fa-cog me-2"></i>Painel Admin
+            </a>
+            <a href="{% url 'sobre' %}" class="btn btn-outline-secondary">
+                <i class="fas fa-info-circle me-2"></i>Sobre o Sistema
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

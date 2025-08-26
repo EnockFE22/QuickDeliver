@@ -1,0 +1,89 @@
+{% extends 'deliveries/base.html' %}
+
+{% block title %}Pedidos - QuickDeliver{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="display-4 mb-4">📦 Lista de Pedidos</h1>
+    
+    <div class="card">
+        <div class="card-body">
+            {% if pedidos %}
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>ID</th>
+                            <th>Cliente</th>
+                            <th>Entregador</th>
+                            <th>Status</th>
+                            <th>Prioridade</th>
+                            <th>Data/Hora</th>
+                            <th>Valor Total</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for pedido in pedidos %}
+                        <tr>
+                            <td>{{ pedido.id }}</td>
+                            <td>{{ pedido.cliente.nome }}</td>
+                            <td>
+                                {% if pedido.entregador %}
+                                    {{ pedido.entregador.nome }}
+                                {% else %}
+                                    <span class="text-muted">Não atribuído</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <span class="badge 
+                                    {% if pedido.status == 'E' %}bg-success
+                                    {% elif pedido.status == 'R' %}bg-warning
+                                    {% else %}bg-info{% endif %}">
+                                    {{ pedido.get_status_display }}
+                                </span>
+                            </td>
+                            <td>
+                                <span class="badge 
+                                    {% if pedido.prioridade == 'U' %}bg-danger
+                                    {% else %}bg-secondary{% endif %}">
+                                    {{ pedido.get_prioridade_display }}
+                                </span>
+                            </td>
+                            <td>{{ pedido.data_hora_pedido|date:"d/m/Y H:i" }}</td>
+                            <td>R$ {{ pedido.valor_total|floatformat:2 }}</td>
+                            <td>
+                                <a href="{% url 'detalhes_pedido' pedido.id %}" class="btn btn-sm btn-info">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <a href="#" class="btn btn-sm btn-warning">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="text-center py-4">
+                <i class="fas fa-box fa-3x text-muted mb-3"></i>
+                <p class="text-muted">Nenhum pedido cadastrado ainda.</p>
+                <a href="{% url 'admin:deliveries_pedido_add' %}" class="btn btn-success">
+                    <i class="fas fa-plus me-2"></i>Cadastrar Primeiro Pedido
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="mt-3">
+        <a href="{% url 'home' %}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Voltar para Home
+        </a>
+        <a href="{% url 'admin:deliveries_pedido_add' %}" class="btn btn-success">
+            <i class="fas fa-plus me-2"></i>Novo Pedido
+        </a>
+    </div>
+</div>
+{% endblock %}
